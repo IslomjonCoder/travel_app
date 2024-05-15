@@ -1,0 +1,13 @@
+{
+  "settings": "Settings",
+  "language": "Language",
+  "notifications": "Notifications",
+  "termsAndConditions": "Terms and conditions",
+  "aboutApp": "About App",
+  "logout": "Logout",
+  "favourite": "Favourite",
+  "map": "Map",
+  "home": "Home",
+  "cancel": "Cancel",
+  "areYouSureYouWantToLogout": "Are you sure you want to logout?"
+}

@@ -1,0 +1,13 @@
+{
+  "settings": "Настройки",
+  "language": "Язык",
+  "notifications": "Уведомления",
+  "termsAndConditions": "Условия и положения",
+  "aboutApp": "О приложении",
+  "logout": "Выход",
+  "favourite": "Избранное",
+  "map": "Карта",
+  "home": "Главная",
+  "cancel": "Cancel",
+  "areYouSureYouWantToLogout": "Are you sure you want to logout?"
+}
