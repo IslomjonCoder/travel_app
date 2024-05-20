@@ -1,5 +1,4 @@
 import 'package:awesome_extensions/awesome_extensions.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -88,14 +87,14 @@ class SettingsScreen extends StatelessWidget {
                               onPressed: () => Navigator.of(context).pop(),
                             ),
                             TextButton(
-                              child: Text(S
-                                  .of(context)
-                                  .logout),
                               style: TextButton.styleFrom(foregroundColor: AppColors.error500),
                               onPressed: () {
                                 supabase.auth.signOut();
                                 Navigator.of(context).pop();
                               },
+                              child: Text(S
+                                  .of(context)
+                                  .logout),
                             ),
                           ],
                         );

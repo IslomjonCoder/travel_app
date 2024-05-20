@@ -3,10 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:travel_app/core/constants/colors.dart';
 import 'package:travel_app/core/constants/text_styles.dart';
 import 'package:travel_app/features/main/settings/presentation/manager/settings/settings_cubit.dart';
-import 'package:travel_app/features/navigation/manager/navigation_cubit.dart';
 import 'package:travel_app/features/navigation/pages/navigation_screen.dart';
+import 'package:travel_app/features/splash_onboarding/pages/splash_screen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:travel_app/features/router/router_screen.dart';
 import 'package:travel_app/generated/l10n.dart';
 
 class App extends StatelessWidget {
@@ -54,7 +53,7 @@ class MyApp extends StatelessWidget {
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
         ),
       ),
-      home: const RouterScreen(),
+      home:  const SplashScreen(),
       localizationsDelegates: const [
         S.delegate,
         GlobalMaterialLocalizations.delegate,

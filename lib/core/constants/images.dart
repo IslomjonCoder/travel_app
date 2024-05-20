@@ -1,14 +1,18 @@
 class AppImages {
   AppImages._();
 
+  static const String logo = 'assets/images/Screenshot_2024-05-16_161419-removebg-preview.png';
+
   static const String onBoardingImage1 = "assets/images/Uzbekistan_modern_png.png";
   static const String onBoardingImage2 = "assets/images/img.png";
   static const String onBoardingImage3 = "assets/images/Mobile_app_Navigate_with_Ease,_Uzbekistan_travel_app_png.png";
+
 
   static const String travel = "assets/vector/building-landmark-moaque-svgrepo-com.svg";
   static const String locationMarker = "assets/vector/location-pin-svgrepo-com (2).svg";
   static const String clock = "assets/vector/clock-circle-svgrepo-com.svg";
 
+  static const String imagePlaceHolder = "https://storage.googleapis.com/proudcity/mebanenc/uploads/2021/03/placeholder-image.png";
 
 //   -- Linear Icons --
   static const String rrangeCircle = "assets/vector/linear/rrange-circle-(Compressify.io).svg";

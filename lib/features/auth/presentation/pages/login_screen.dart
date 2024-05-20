@@ -7,7 +7,6 @@ import 'package:travel_app/core/constants/text_styles.dart';
 import 'package:travel_app/core/helpers/dialog.dart';
 import 'package:travel_app/features/auth/presentation/manager/auth_cubit.dart';
 import 'package:travel_app/features/auth/presentation/manager/login/login_cubit.dart';
-import 'package:travel_app/main.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});

@@ -7,8 +7,10 @@ import 'package:travel_app/core/constants/colors.dart';
 import 'package:travel_app/core/constants/images.dart';
 import 'package:travel_app/core/constants/text_strings.dart';
 import 'package:travel_app/core/constants/text_styles.dart';
+import 'package:travel_app/core/singleton/local_storage/local_keys.dart';
+import 'package:travel_app/core/singleton/local_storage/local_storage.dart';
+import 'package:travel_app/features/router/router_screen.dart';
 import 'package:travel_app/features/splash_onboarding/manager/onboarding_cubit.dart';
-import 'package:travel_app/features/navigation/pages/navigation_screen.dart';
 
 class OnBoardingScreen extends StatelessWidget {
   const OnBoardingScreen({super.key});
@@ -150,12 +152,12 @@ class BottomNavigation extends StatelessWidget {
           BlocBuilder<OnboardingCubit, int>(
             builder: (context, currentPage) {
               return FilledButton(
-
-                onPressed: () {
+                onPressed: () async {
                   if (currentPage == 2) {
-                    context.pushReplacement(const NavigationScreen());
+                    context.pushReplacement(const RouterScreen());
                     return;
                   }
+                  LocalStorageShared.setBool(StorageKeys.isFirstTime, false);
                   context.read<OnboardingCubit>().nextPage();
                 },
                 child: Text(currentPage == 2 ? "Get Started" : "Next"),

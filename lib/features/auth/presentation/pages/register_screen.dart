@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:gap/gap.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:travel_app/core/constants/colors.dart';
 import 'package:travel_app/core/constants/text_styles.dart';
 import 'package:travel_app/core/helpers/dialog.dart';
 import 'package:travel_app/features/auth/presentation/manager/auth_cubit.dart';
 import 'package:travel_app/features/auth/presentation/manager/register/register_cubit.dart';
-import 'package:travel_app/main.dart';
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({super.key});

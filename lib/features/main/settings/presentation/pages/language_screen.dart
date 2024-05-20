@@ -1,4 +1,3 @@
-import 'dart:isolate';
 
 import 'package:flag/flag.dart';
 import 'package:flutter/material.dart';
@@ -57,7 +56,6 @@ class LanguageItem extends StatelessWidget {
               language.code,
               height: 32,
               width: 32,
-              fit: BoxFit.contain,
               borderRadius: 8,
             ),
             const Gap(8),

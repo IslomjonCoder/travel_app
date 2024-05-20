@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:travel_app/core/constants/colors.dart';
 import 'package:travel_app/core/constants/text_styles.dart';
+import 'package:travel_app/generated/l10n.dart';
 
 class AboutUsScreen extends StatelessWidget {
   const AboutUsScreen({super.key});
@@ -11,7 +12,7 @@ class AboutUsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('About Us'),
+        title: Text(S.of(context).aboutApp),
       ),
       body: const SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 32),

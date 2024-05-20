@@ -1,11 +1,23 @@
 import 'package:awesome_extensions/awesome_extensions.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:formz/formz.dart';
 import 'package:gap/gap.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:travel_app/core/constants/colors.dart';
 import 'package:travel_app/core/constants/images.dart';
 import 'package:travel_app/core/constants/text_styles.dart';
+import 'package:travel_app/features/main/favourite/presentation/manager/favourite_cubit.dart';
+import 'package:travel_app/features/main/home/data/models/banner_model.dart';
+import 'package:travel_app/features/main/home/data/models/category_model.dart';
+import 'package:travel_app/features/main/home/data/models/place_model.dart';
+import 'package:travel_app/features/main/home/presentation/manager/banner/banner_cubit.dart';
+import 'package:travel_app/features/main/home/presentation/manager/category/category_cubit.dart';
+import 'package:travel_app/features/main/home/presentation/manager/category_index/category_index_cubit.dart';
+import 'package:travel_app/features/main/home/presentation/manager/place/place_cubit.dart';
 import 'package:travel_app/features/main/home/presentation/pages/place_detail.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -14,25 +26,57 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+//       floatingActionButton: FloatingActionButton(
+//         onPressed: () async {
+//           // final response = await supabase.from('places').select().single();
+//           // final wkbHex = response['location'] as String;
+//           // final pointFromWKB = Point.decodeHex(wkbHex);
+//           await supabase.from('places').insert({
+//             'location': 'POINT(41.34799581088668 69.28806848074262)',
+//             'name': "Square of Martyrs in Uzbekistan",
+//             'description':
+//                 """The Square of Martyrs, also known as Independence Square (Mustakillik Square), is a historical monument located in Tashkent, Uzbekistan.
+//
+// The square was built to commemorate victims of Tsarist and Soviet colonialism during the 20th century. This includes those marked as "enemies of the people" who were eliminated from the history and culture of the Uzbek people. The park was announced in July 1999""",
+//             "category_id": 7,
+//             "region_id": 2,
+//             "time": "00:00-24:00"
+//
+//           });
+//           print("inserted");
+//         },
+//       ),
       appBar: AppBar(
         centerTitle: true,
         title: const Text('Home'),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            // Custom PageView and PageIndicator widgets
-            const CustomPageView(),
-            const Gap(16),
-            const PageIndicator(),
-            const Gap(16),
-            // CategoryList widget
-            CategoryList(),
-            const Gap(16),
-            // FeaturedPlacesList widget
-            const FeaturedPlacesList(),
-          ],
+      body: BlocListener<CategoryIndexCubit, int?>(
+        listener: (context, state) {
+          if (state == null) {
+            context.read<PlaceCubit>().getAllPlaces();
+          } else {
+            context.read<PlaceCubit>().getPlacesListByCategory(context.read<CategoryCubit>().state.categories[state]);
+          }
+        },
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              // Custom PageView and PageIndicator widgets
+              const CustomPageView(),
+              const Gap(16),
+              const PageIndicator(),
+              const Gap(16),
+              // CategoryList widget
+              CategoryList(
+                onTap: (int index) => context.read<CategoryIndexCubit>().changeIndex(index),
+                selectedIndex: context.watch<CategoryIndexCubit>().state,
+              ),
+              const Gap(16),
+              // FeaturedPlacesList widget
+              const FeaturedPlacesList(),
+            ],
+          ),
         ),
       ),
     );
@@ -41,67 +85,95 @@ class HomeScreen extends StatelessWidget {
 
 // Custom widget for the CategoryList
 class CategoryList extends StatelessWidget {
-  CategoryList({super.key});
+  const CategoryList({super.key, required this.onTap, this.selectedIndex});
 
-  final List<String> categories = [
-    'Historical',
-    'Food',
-    'Nature',
-    'Travel',
-    'Culture',
-    'Shopping',
-    'Restrooms',
-  ];
+  final Function(int index) onTap;
+  final int? selectedIndex;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 40,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        itemBuilder: (context, index) {
-          return CategoryListItem(
-            category: categories[index],
+    return BlocBuilder<CategoryCubit, CategoryState>(
+      builder: (context, state) {
+        if (state.status.isInProgress) {
+          return SizedBox(
+            height: 40,
+            child: Skeletonizer(
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) => CategoryListItem(
+                  category: CategoryModel(id: 0, name: 'Nature', image: ''),
+                  isNetworkImage: false,
+                  index: 0,
+                  onTap: (int index) {},
+                ),
+                separatorBuilder: (context, index) => const Gap(4),
+                itemCount: 10,
+              ),
+            ),
           );
-        },
-        separatorBuilder: (context, index) => const Gap(4),
-        itemCount: categories.length,
-      ),
+        }
+        if (state.status.isFailure) {
+          return Text(state.failure?.message ?? "");
+        }
+        return SizedBox(
+          height: 40,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemBuilder: (context, index) => CategoryListItem(
+              category: state.categories[index],
+              index: index,
+              onTap: onTap,
+              selectedIndex: selectedIndex,
+            ),
+            separatorBuilder: (context, index) => const Gap(4),
+            itemCount: state.categories.length,
+          ),
+        );
+      },
     );
   }
 }
 
 // Custom widget for a single category list item
 class CategoryListItem extends StatelessWidget {
-  final String category;
+  final CategoryModel category;
+  final bool isNetworkImage;
 
-  const CategoryListItem({super.key, required this.category});
+  final int index;
+  final int? selectedIndex;
+  final Function(int index) onTap;
+
+  const CategoryListItem({
+    super.key,
+    required this.category,
+    this.isNetworkImage = true,
+    required this.index,
+    required this.onTap,
+    this.selectedIndex,
+  });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () => onTap(index),
       borderRadius: BorderRadius.circular(20),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         alignment: Alignment.center,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
+          color: selectedIndex == index && !context.watch<CategoryCubit>().state.status.isInProgress
+              ? AppColors.brandColor100
+              : null,
           border: Border.all(color: AppColors.greyscale100),
         ),
         child: Row(
           children: [
-            SvgPicture.asset(
-              AppImages.travel,
-              width: 24,
-              height: 24,
-              fit: BoxFit.scaleDown,
-            ),
+            isNetworkImage
+                ? CachedNetworkImage(imageUrl: category.image, width: 20, height: 20, fit: BoxFit.cover)
+                : const Text('oo'),
             const Gap(4),
-            Text(
-              category,
-              style: AppTextStyle.subtitleS2Medium,
-            ),
+            Text(category.name, style: AppTextStyle.subtitleS2Medium),
           ],
         ),
       ),
@@ -115,14 +187,73 @@ class FeaturedPlacesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemBuilder: (context, index) {
-        return FeaturedPlaceItem(place: registanSquare);
+    return BlocBuilder<PlaceCubit, PlaceState>(
+      builder: (context, state) {
+        if (state.status.isFailure) {
+          return Text(state.failure?.message ?? "");
+        }
+
+        if (state.status.isSuccess && state.places.isEmpty) {
+          return const Text("No places found", style: AppTextStyle.headlineSemiboldH6);
+        }
+        return ListView.separated(
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemBuilder: (context, index) {
+            return state.status.isInProgress
+                ? Skeletonizer(
+                    child: Column(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(16),
+                          child: AspectRatio(
+                            aspectRatio: 7 / 5,
+                            child: Ink(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: Container(
+                                padding: const EdgeInsets.all(16),
+                                alignment: Alignment.bottomLeft,
+                                decoration: const BoxDecoration(color: Colors.red),
+                                child: const Text('place.name').applyShimmer(),
+                              ).applyShimmer(),
+                            ),
+                          ),
+                        ),
+                        const Gap(8),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                SvgPicture.asset(
+                                  AppImages.locationMarker,
+                                  height: 16,
+                                ).applyShimmer(),
+                                const Gap(4),
+                                const Text('ksalds;lsss'),
+                              ],
+                            ),
+                            const Gap(4),
+                            Row(
+                              children: [
+                                SvgPicture.asset(AppImages.clock, height: 16),
+                                const Gap(4),
+                                const Text('sdxskjl'),
+                              ],
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  )
+                : FeaturedPlaceItem(place: state.places[index]);
+          },
+          separatorBuilder: (context, index) => const Gap(16),
+          itemCount: state.status.isInProgress ? 10 : state.places.length,
+        );
       },
-      separatorBuilder: (context, index) => const Gap(16),
-      itemCount: 10,
     );
   }
 }
@@ -131,41 +262,45 @@ class FeaturedPlacesList extends StatelessWidget {
 class FeaturedPlaceItem extends StatelessWidget {
   const FeaturedPlaceItem({super.key, required this.place});
 
-  final Place place;
+  final PlaceModel place;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => context.push(PlaceDetail(place: place)),
+      onTap: () => context.push(BlocProvider.value(value: context.read<FavouriteCubit>(),child: PlaceDetail(place: place),)),
       child: Column(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(16),
-            clipBehavior: Clip.antiAlias,
-            child: AspectRatio(
-              aspectRatio: 7 / 5,
-              child: Ink(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  image: DecorationImage(
-                    image: AssetImage(place.image),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                child: Container(
-                  padding: const EdgeInsets.all(16),
-                  alignment: Alignment.bottomLeft,
+          AspectRatio(
+            aspectRatio: 7 / 5,
+            child: Hero(
+              tag: place.id,
+              child: Card(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                clipBehavior: Clip.antiAlias,
+                child: Ink(
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      stops: const [0.3, 0.99],
-                      colors: [Colors.transparent, AppColors.greyscale700.withOpacity(0.7)],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
+                    borderRadius: BorderRadius.circular(16),
+                    image: DecorationImage(
+                      image: CachedNetworkImageProvider(
+                          place.images.isEmpty ? AppImages.imagePlaceHolder : place.images.first),
+                      fit: BoxFit.cover,
                     ),
                   ),
-                  child: Text(
-                    place.name,
-                    style: AppTextStyle.subtitleS1.copyWith(color: Colors.white),
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    alignment: Alignment.bottomLeft,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        stops: const [0.3, 0.99],
+                        colors: [Colors.transparent, AppColors.greyscale700.withOpacity(0.7)],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                      ),
+                    ),
+                    child: Text(
+                      place.name,
+                      style: AppTextStyle.subtitleS1.copyWith(color: Colors.white),
+                    ),
                   ),
                 ),
               ),
@@ -182,7 +317,7 @@ class FeaturedPlaceItem extends StatelessWidget {
                     height: 16,
                   ),
                   const Gap(4),
-                  Text(place.location, style: AppTextStyle.subtitleS2Medium),
+                  Text(place.region.name, style: AppTextStyle.subtitleS2Medium),
                 ],
               ),
               const Gap(4),
@@ -206,19 +341,25 @@ class PageIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final pageController = PageController();
-
-    return Center(
-      child: SmoothPageIndicator(
-        controller: pageController,
-        count: 3,
-        effect: const WormEffect(
-          dotHeight: 8,
-          dotWidth: 8,
-          dotColor: AppColors.greyscale300,
-          activeDotColor: AppColors.brandColor500Default,
-        ),
-      ),
+    return BlocBuilder<BannerCubit, BannerState>(
+      builder: (context, state) {
+        final cubit = context.read<BannerCubit>();
+        return Center(
+          child: Skeletonizer(
+            enabled: state.status.isInProgress,
+            child: SmoothPageIndicator(
+              controller: cubit.pageController,
+              count: state.status.isInProgress ? 3 : state.banners.length,
+              effect: WormEffect(
+                dotHeight: 8,
+                dotWidth: 8,
+                dotColor: AppColors.greyscale300,
+                activeDotColor: state.status.isInProgress ? AppColors.greyscale300 : AppColors.brandColor500Default,
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -228,26 +369,38 @@ class CustomPageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final pageController = PageController();
-    return AspectRatio(
-      aspectRatio: 16 / 9,
-      child: PageView(
-        controller: pageController,
-        scrollDirection: Axis.horizontal,
-        children: const [
-          PageViewItem(image: AppImages.onBoardingImage1),
-          PageViewItem(image: AppImages.onBoardingImage1),
-          PageViewItem(image: AppImages.onBoardingImage1),
-        ],
-      ),
+    return BlocBuilder<BannerCubit, BannerState>(
+      builder: (context, state) {
+        final cubit = context.read<BannerCubit>();
+
+        return Skeletonizer(
+          enabled: state.status.isInProgress,
+          child: AspectRatio(
+            aspectRatio: 16 / 9,
+            child: PageView(
+              controller: cubit.pageController,
+              children: state.status.isInProgress
+                  ? List.generate(
+                      3,
+                      (index) => AspectRatio(
+                            aspectRatio: 16 / 9,
+                            child: Container(
+                              decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.circular(12.0)),
+                            ).applyShimmer(enable: state.status.isInProgress),
+                          ))
+                  : state.banners.map((e) => PageViewItem(banner: e)).toList(),
+            ),
+          ),
+        );
+      },
     );
   }
 }
 
 class PageViewItem extends StatelessWidget {
-  final String image;
+  final BannerEntity banner;
 
-  const PageViewItem({super.key, required this.image});
+  const PageViewItem({super.key, required this.banner});
 
   @override
   Widget build(BuildContext context) {
@@ -257,7 +410,7 @@ class PageViewItem extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12.0),
           image: DecorationImage(
-            image: AssetImage(image),
+            image: CachedNetworkImageProvider(banner.image),
             fit: BoxFit.cover,
           ),
         ),
@@ -265,28 +418,3 @@ class PageViewItem extends StatelessWidget {
     );
   }
 }
-
-class Place {
-  final String image;
-  final String name;
-  final String description;
-  final String location;
-  final String time;
-
-  Place({
-    required this.image,
-    required this.name,
-    required this.description,
-    required this.location,
-    required this.time,
-  });
-}
-
-final registanSquare = Place(
-  image: AppImages.onBoardingImage1,
-  name: 'Registan Square',
-  description:
-      'The Registan is a historic site in the city of Samarkand, known for its beautiful architecture and rich history. Lectus a velit sed pretium egestas integer lacus, mi. Risus eget venenatis at amet sed. Fames rhoncus purus ornare nulla. Lorem dolor eget sagittis mattis eget nam. Nulla nisi egestas nisl nibh eleifend luctus.',
-  location: "Registan Square, Samarkand",
-  time: '8:00 - 17:00',
-);

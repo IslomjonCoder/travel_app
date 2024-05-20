@@ -1,40 +1,53 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:travel_app/core/constants/colors.dart';
 import 'package:travel_app/core/constants/images.dart';
 import 'package:travel_app/core/constants/text_styles.dart';
-import 'package:travel_app/features/main/home/presentation/pages/home_screen.dart';
+import 'package:travel_app/core/helpers/location.dart';
+import 'package:travel_app/features/main/favourite/presentation/manager/favourite_cubit.dart';
+import 'package:travel_app/features/main/home/data/models/place_model.dart';
+import 'package:travel_app/features/main/home/presentation/manager/detail/place_detail_cubit.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PlaceDetail extends StatelessWidget {
   const PlaceDetail({super.key, required this.place});
 
-  final Place place;
+  final PlaceModel place;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(place.name)),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            ImageGallery(place: place),
-            const Gap(16),
-            PlaceDescription(place: place),
-            const Gap(16),
-            ReviewsSection(place: place),
-          ],
+    return BlocProvider(
+      create: (context) => PlaceDetailCubit(),
+      child: Scaffold(
+        appBar: AppBar(title: Text(place.name)),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              ImageGallery(place: place),
+              const Gap(16),
+              PlaceDescription(place: place),
+              const Gap(16),
+              ReviewsSection(place: place),
+            ],
+          ),
         ),
+        bottomNavigationBar: PlaceDetailBottomNavBar(place: place),
       ),
-      bottomNavigationBar: const PlaceDetailBottomNavBar(),
     );
   }
 }
 
 class PlaceDetailBottomNavBar extends StatelessWidget {
-  const PlaceDetailBottomNavBar({super.key});
+  const PlaceDetailBottomNavBar({super.key, required this.place});
+
+  final PlaceModel place;
 
   @override
   Widget build(BuildContext context) {
@@ -48,11 +61,22 @@ class PlaceDetailBottomNavBar extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12.0),
               ),
             ),
-            onPressed: () {},
-            icon: const Icon(Icons.favorite_border),
+            onPressed: () async {
+              context.read<FavouriteCubit>().toggleFavourite(place);
+
+            },
+            icon: Icon(context.watch<FavouriteCubit>().isFavourite(place) ? Icons.favorite : Icons.favorite_border, color: context.watch<FavouriteCubit>().isFavourite(place) ? Colors.red : null),
           ),
           const Gap(8),
-          Expanded(child: FilledButton(onPressed: () {}, child: const Text('Navigate'))),
+          Expanded(
+              child: FilledButton(
+                  onPressed: () async {
+                    final LatLng latLng = LocationHelper.convertWkb(place.location);
+                    final query = '${latLng.latitude},${latLng.longitude}';
+                    final uri = Uri.parse('https://www.google.com/maps/search/?api=1&query=$query');
+                    await launchUrl(uri);
+                  },
+                  child: const Text('Navigate'))),
         ],
       ),
     );
@@ -60,7 +84,7 @@ class PlaceDetailBottomNavBar extends StatelessWidget {
 }
 
 class ReviewsSection extends StatelessWidget {
-  final Place place;
+  final PlaceEntity place;
 
   const ReviewsSection({super.key, required this.place});
 
@@ -86,9 +110,8 @@ class ReviewsSection extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  CircleAvatar(
+                  const CircleAvatar(
                     radius: 24,
-                    backgroundImage: AssetImage(place.image),
                   ),
                   const Gap(8),
                   Expanded(
@@ -109,7 +132,7 @@ class ReviewsSection extends StatelessWidget {
                   Row(
                     children: List.generate(
                       5,
-                          (index) => Icon(Icons.star, color: Colors.yellow.shade800, size: 16),
+                      (index) => Icon(Icons.star, color: Colors.yellow.shade800, size: 16),
                     ),
                   ),
                 ],
@@ -130,7 +153,7 @@ class ReviewsSection extends StatelessWidget {
 }
 
 class PlaceDescription extends StatelessWidget {
-  final Place place;
+  final PlaceEntity place;
 
   const PlaceDescription({super.key, required this.place});
 
@@ -150,7 +173,7 @@ class PlaceDescription extends StatelessWidget {
               fit: BoxFit.scaleDown,
             ),
             const Gap(4),
-            Text(place.location, style: AppTextStyle.subtitleS1Medium),
+            Text(place.region.name, style: AppTextStyle.subtitleS1Medium),
           ],
         ),
         const Gap(8),
@@ -184,51 +207,88 @@ class PlaceDescription extends StatelessWidget {
 }
 
 class ImageGallery extends StatelessWidget {
-  final Place place;
+  final PlaceModel place;
 
   const ImageGallery({super.key, required this.place});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        AspectRatio(
-          aspectRatio: 3 / 2,
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12.0),
-              image: DecorationImage(
-                image: AssetImage(place.image),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-        ),
-        const Gap(16),
-        SizedBox(
-          height: 56,
-          width: double.infinity,
-          child: Center(
-            child: ListView.separated(
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) => Container(
-                height: 56,
-                width: 56,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12.0),
-                  image: DecorationImage(
-                    image: AssetImage(place.image),
-                    fit: BoxFit.cover,
+    return BlocBuilder<PlaceDetailCubit, PlaceDetailState>(
+      builder: (context, state) {
+        return Column(
+          children: [
+            GestureDetector(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return Dialog.fullscreen(
+                      child: Stack(
+                        children: [
+                          PhotoView(imageProvider: CachedNetworkImageProvider(place.images[state.index])),
+                          Positioned(
+                            top: 16,
+                            right: 16,
+                            child: IconButton.filled(
+                              onPressed: () => Navigator.of(context).pop(),
+                              icon: const Icon(Icons.close),
+                              // color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              },
+              child: AspectRatio(
+                aspectRatio: 3 / 2,
+                child: Hero(
+                  tag: place.id,
+                  child: AnimatedContainer(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12.0),
+                      image: DecorationImage(
+                        image: CachedNetworkImageProvider(
+                            place.images.isEmpty ? AppImages.imagePlaceHolder : place.images[state.index]),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    duration: const Duration(milliseconds: 300),
                   ),
                 ),
               ),
-              separatorBuilder: (context, index) => const Gap(8),
-              itemCount: 5,
             ),
-          ),
-        ),
-      ],
+            const Gap(16),
+            SizedBox(
+              height: 56,
+              width: double.infinity,
+              child: Center(
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) => GestureDetector(
+                    onTap: () => context.read<PlaceDetailCubit>().changeImageIndex(index),
+                    child: Container(
+                      height: 56,
+                      width: 56,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12.0),
+                        image: DecorationImage(
+                          image: CachedNetworkImageProvider(place.images[index]),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  ),
+                  separatorBuilder: (context, index) => const Gap(8),
+                  itemCount: place.images.length,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
