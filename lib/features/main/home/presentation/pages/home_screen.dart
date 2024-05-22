@@ -18,7 +18,10 @@ import 'package:travel_app/features/main/home/presentation/manager/banner/banner
 import 'package:travel_app/features/main/home/presentation/manager/category/category_cubit.dart';
 import 'package:travel_app/features/main/home/presentation/manager/category_index/category_index_cubit.dart';
 import 'package:travel_app/features/main/home/presentation/manager/place/place_cubit.dart';
+import 'package:travel_app/features/main/home/presentation/manager/region/region_cubit.dart';
 import 'package:travel_app/features/main/home/presentation/pages/place_detail.dart';
+import 'package:travel_app/features/main/home/presentation/pages/region_detail_screen.dart';
+import 'package:travel_app/main.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -26,29 +29,57 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-//       floatingActionButton: FloatingActionButton(
-//         onPressed: () async {
-//           // final response = await supabase.from('places').select().single();
-//           // final wkbHex = response['location'] as String;
-//           // final pointFromWKB = Point.decodeHex(wkbHex);
-//           await supabase.from('places').insert({
-//             'location': 'POINT(41.34799581088668 69.28806848074262)',
-//             'name': "Square of Martyrs in Uzbekistan",
-//             'description':
-//                 """The Square of Martyrs, also known as Independence Square (Mustakillik Square), is a historical monument located in Tashkent, Uzbekistan.
-//
-// The square was built to commemorate victims of Tsarist and Soviet colonialism during the 20th century. This includes those marked as "enemies of the people" who were eliminated from the history and culture of the Uzbek people. The park was announced in July 1999""",
-//             "category_id": 7,
-//             "region_id": 2,
-//             "time": "00:00-24:00"
-//
-//           });
-//           print("inserted");
-//         },
-//       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          // final response = await supabase.from('places').select().single();
+          // final wkbHex = response['location'] as String;
+          // final pointFromWKB = Point.decodeHex(wkbHex);
+          await supabase.from('places').insert({
+            'location': 'POINT(41.34785176305069 69.2850566282956)',
+            'name': "Besh Qozon",
+            'description':
+                """Besh qozon 'https://beshqozon.uz/uz/'""",
+            "category_id": 5,
+            "region_id": 2,
+            "time": "09:00-23:00"
+
+          });
+          print("inserted");
+          // context.read<PlaceCubit>().getAllPlaces();
+        },
+      ),
       appBar: AppBar(
         centerTitle: true,
         title: const Text('Home'),
+      ),
+      drawer: Drawer(
+        //   using region cubit show all regions
+
+        child: BlocBuilder<RegionCubit, RegionState>(
+          builder: (context, state) {
+            return ListView.builder(
+              itemCount: state.regions.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(state.regions[index].name),
+                  onTap: () {
+                    final List<PlaceModel> filteredPlaces = context
+                        .read<PlaceCubit>()
+                        .state
+                        .places
+                        .where((element) => element.region.id == state.regions[index].id)
+                        .toList();
+                    Scaffold.of(context).closeDrawer();
+                    context.push(BlocProvider.value(
+                      value: BlocProvider.of<FavouriteCubit>(context),
+                      child: RegionDetailScreen(regions: filteredPlaces, regionName: state.regions[index].name),
+                    ));
+                  },
+                );
+              },
+            );
+          },
+        ),
       ),
       body: BlocListener<CategoryIndexCubit, int?>(
         listener: (context, state) {
@@ -267,7 +298,10 @@ class FeaturedPlaceItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => context.push(BlocProvider.value(value: context.read<FavouriteCubit>(),child: PlaceDetail(place: place),)),
+      onTap: () => context.push(BlocProvider.value(
+        value: context.read<FavouriteCubit>(),
+        child: PlaceDetail(place: place),
+      )),
       child: Column(
         children: [
           AspectRatio(

@@ -8,13 +8,16 @@ import 'package:travel_app/features/main/favourite/presentation/pages/favourite_
 import 'package:travel_app/features/main/home/data/data_sources/banner_data_source.dart';
 import 'package:travel_app/features/main/home/data/data_sources/category_data_source.dart';
 import 'package:travel_app/features/main/home/data/data_sources/place_datasource.dart';
+import 'package:travel_app/features/main/home/data/data_sources/region_datasource.dart';
 import 'package:travel_app/features/main/home/data/repositories/banner_repository.dart';
 import 'package:travel_app/features/main/home/data/repositories/category_repository.dart';
 import 'package:travel_app/features/main/home/data/repositories/place_repository.dart';
+import 'package:travel_app/features/main/home/data/repositories/region_repository.dart';
 import 'package:travel_app/features/main/home/presentation/manager/banner/banner_cubit.dart';
 import 'package:travel_app/features/main/home/presentation/manager/category/category_cubit.dart';
 import 'package:travel_app/features/main/home/presentation/manager/category_index/category_index_cubit.dart';
 import 'package:travel_app/features/main/home/presentation/manager/place/place_cubit.dart';
+import 'package:travel_app/features/main/home/presentation/manager/region/region_cubit.dart';
 import 'package:travel_app/features/main/home/presentation/pages/home_screen.dart';
 import 'package:travel_app/features/main/map/presentation/pages/map_screen.dart';
 import 'package:travel_app/features/main/settings/presentation/pages/settings_screen.dart';
@@ -41,6 +44,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
         BlocProvider(create: (context) => PlaceCubit(PlaceRepository(PlaceDataSourceImpl()))..getPlaces()),
         BlocProvider(create: (context) => CategoryIndexCubit()),
         BlocProvider(create: (context) => FavouriteCategoryCubit()),
+        BlocProvider(create: (context) => RegionCubit(RegionRepositoryImpl(RegionDataSourceImpl()))..getRegions()),
         BlocProvider(create: (context) => FavouriteCubit(FavouritesService())..getFavourites()),
       ],
       child: BlocBuilder<NavigationCubit, int>(

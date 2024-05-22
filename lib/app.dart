@@ -53,7 +53,9 @@ class MyApp extends StatelessWidget {
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
         ),
       ),
-      home:  const SplashScreen(),
+      // TODO: Remove this
+      // home:  const SplashScreen(),
+      home:  const NavigationScreen(),
       localizationsDelegates: const [
         S.delegate,
         GlobalMaterialLocalizations.delegate,

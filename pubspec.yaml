@@ -19,7 +19,7 @@ dependencies:
   awesome_extensions: ^2.0.14
   flutter_svg: ^2.0.10+1
   google_maps_flutter: ^2.6.1
-  intl: ^0.18.1
+  intl: any
   flutter_localizations:
     sdk: flutter
   flag: ^7.0.0
