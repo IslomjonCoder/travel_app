@@ -24,8 +24,10 @@ class MessageLookup extends MessageLookupByLibrary {
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "aboutApp": MessageLookupByLibrary.simpleMessage("Biz haqimizda"),
         "areYouSureYouWantToLogout": MessageLookupByLibrary.simpleMessage(
-            "Are you sure you want to logout?"),
-        "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+            "Siz rostdan ham chiqmoqchimisiz?"),
+        "cancel": MessageLookupByLibrary.simpleMessage("Bekor qilish"),
+        "failedToAddReview": MessageLookupByLibrary.simpleMessage(
+            "Izoh qo\'shishda muammo bo\'ldi"),
         "favourite": MessageLookupByLibrary.simpleMessage("Sevimlilar"),
         "home": MessageLookupByLibrary.simpleMessage("Bosh sahifa"),
         "language": MessageLookupByLibrary.simpleMessage("Til"),
@@ -33,8 +35,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "map": MessageLookupByLibrary.simpleMessage("Xarita"),
         "notifications":
             MessageLookupByLibrary.simpleMessage("Bildirishnomalar"),
+        "pleaseEnterSomeText":
+            MessageLookupByLibrary.simpleMessage("Iltimos, matn kiriting"),
         "settings": MessageLookupByLibrary.simpleMessage("Sozlamalar"),
+        "submit": MessageLookupByLibrary.simpleMessage("Yuborish"),
         "termsAndConditions":
-            MessageLookupByLibrary.simpleMessage("Foydalanish shartlari")
+            MessageLookupByLibrary.simpleMessage("Foydalanish shartlari"),
+        "typeSomething":
+            MessageLookupByLibrary.simpleMessage("Biror narsani kiriting"),
+        "writeYourReviewHere":
+            MessageLookupByLibrary.simpleMessage("Izohingizni bu yerda yozing")
       };
 }

@@ -24,16 +24,25 @@ class MessageLookup extends MessageLookupByLibrary {
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "aboutApp": MessageLookupByLibrary.simpleMessage("О приложении"),
         "areYouSureYouWantToLogout": MessageLookupByLibrary.simpleMessage(
-            "Are you sure you want to logout?"),
-        "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+            "Вы уверены, что хотите выйти?"),
+        "cancel": MessageLookupByLibrary.simpleMessage("Отменить"),
+        "failedToAddReview":
+            MessageLookupByLibrary.simpleMessage("Не удалось добавить отзыв"),
         "favourite": MessageLookupByLibrary.simpleMessage("Избранное"),
         "home": MessageLookupByLibrary.simpleMessage("Главная"),
         "language": MessageLookupByLibrary.simpleMessage("Язык"),
         "logout": MessageLookupByLibrary.simpleMessage("Выход"),
         "map": MessageLookupByLibrary.simpleMessage("Карта"),
         "notifications": MessageLookupByLibrary.simpleMessage("Уведомления"),
+        "pleaseEnterSomeText": MessageLookupByLibrary.simpleMessage(
+            "Пожалуйста, введите какой-нибудь текст"),
         "settings": MessageLookupByLibrary.simpleMessage("Настройки"),
+        "submit": MessageLookupByLibrary.simpleMessage("Отправить"),
         "termsAndConditions":
-            MessageLookupByLibrary.simpleMessage("Условия и положения")
+            MessageLookupByLibrary.simpleMessage("Условия и положения"),
+        "typeSomething":
+            MessageLookupByLibrary.simpleMessage("Напишите что-нибудь"),
+        "writeYourReviewHere":
+            MessageLookupByLibrary.simpleMessage("Напишите свой отзыв здесь")
       };
 }

@@ -1,5 +1,6 @@
 import 'package:travel_app/features/main/home/data/models/category_model.dart';
 import 'package:hive/hive.dart';
+import 'package:travel_app/features/main/home/data/models/review_model.dart';
 
 part 'place_model.g.dart';
 
@@ -42,6 +43,7 @@ class PlaceModel extends PlaceEntity {
   @HiveField(7)
   @override
   final Region region;
+  final ReviewModel review;
 
   PlaceModel({
     required this.id,
@@ -52,6 +54,7 @@ class PlaceModel extends PlaceEntity {
     required this.region,
     this.images = const [],
     required this.category,
+    required this.review,
   }) : super(
     name: name,
     description: description,
@@ -70,6 +73,7 @@ class PlaceModel extends PlaceEntity {
           region: Region.empty(),
           images: [],
           category: CategoryModel.empty(),
+          review: ReviewModel.empty(),
         );
 
   Map<String, dynamic> toMap() => {
@@ -85,7 +89,7 @@ class PlaceModel extends PlaceEntity {
         time: map['time'] as String,
         region: Region.fromMap(map['regions'] as Map<String, dynamic>),
         images: List<String>.from((map['images'] as List).map((e) => e['path'])),
-        category: CategoryModel.fromMap(map['categories'] as Map<String, dynamic>));
+        category: CategoryModel.fromMap(map['categories'] as Map<String, dynamic>), review: ReviewModel.fromMap(map['reviews'] as Map<String, dynamic>));
   }
 
   @override

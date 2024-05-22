@@ -8,6 +8,12 @@
   "favourite": "Избранное",
   "map": "Карта",
   "home": "Главная",
-  "cancel": "Cancel",
-  "areYouSureYouWantToLogout": "Are you sure you want to logout?"
+  "cancel": "Отменить",
+  "areYouSureYouWantToLogout": "Вы уверены, что хотите выйти?",
+  "failedToAddReview": "Не удалось добавить отзыв",
+  "typeSomething": "Напишите что-нибудь",
+  "writeYourReviewHere": "Напишите свой отзыв здесь",
+  "pleaseEnterSomeText": "Пожалуйста, введите какой-нибудь текст",
+  "submit": "Отправить"
+
 }

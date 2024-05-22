@@ -159,6 +159,56 @@ class S {
       args: [],
     );
   }
+
+  /// `Failed to add review`
+  String get failedToAddReview {
+    return Intl.message(
+      'Failed to add review',
+      name: 'failedToAddReview',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Type something`
+  String get typeSomething {
+    return Intl.message(
+      'Type something',
+      name: 'typeSomething',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Write your review here`
+  String get writeYourReviewHere {
+    return Intl.message(
+      'Write your review here',
+      name: 'writeYourReviewHere',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter some text`
+  String get pleaseEnterSomeText {
+    return Intl.message(
+      'Please enter some text',
+      name: 'pleaseEnterSomeText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Submit`
+  String get submit {
+    return Intl.message(
+      'Submit',
+      name: 'submit',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

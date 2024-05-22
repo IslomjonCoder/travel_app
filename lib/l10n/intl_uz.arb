@@ -8,6 +8,11 @@
   "favourite": "Sevimlilar",
   "map": "Xarita",
   "home": "Bosh sahifa",
-  "cancel": "Cancel",
-  "areYouSureYouWantToLogout": "Are you sure you want to logout?"
+  "cancel": "Bekor qilish",
+  "areYouSureYouWantToLogout": "Siz rostdan ham chiqmoqchimisiz?",
+  "failedToAddReview": "Izoh qo'shishda muammo bo'ldi",
+  "typeSomething": "Biror narsani kiriting",
+  "writeYourReviewHere": "Izohingizni bu yerda yozing",
+  "pleaseEnterSomeText": "Iltimos, matn kiriting",
+  "submit": "Yuborish"
 }

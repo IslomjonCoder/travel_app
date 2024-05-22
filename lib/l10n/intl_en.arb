@@ -9,5 +9,10 @@
   "map": "Map",
   "home": "Home",
   "cancel": "Cancel",
-  "areYouSureYouWantToLogout": "Are you sure you want to logout?"
+  "areYouSureYouWantToLogout": "Are you sure you want to logout?",
+  "failedToAddReview": "Failed to add review",
+  "typeSomething": "Type something",
+  "writeYourReviewHere": "Write your review here",
+  "pleaseEnterSomeText": "Please enter some text",
+  "submit": "Submit"
 }

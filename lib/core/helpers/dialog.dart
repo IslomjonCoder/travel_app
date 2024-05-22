@@ -19,12 +19,12 @@ class DialogHelper {
               //     ? AppColors.containerBackgroundColorDark
               //     : AppColors.containerBackgroundColorLight,
             ),
-            child: Column(
+            child: const Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const CircularProgressIndicator(),
-                const Gap(16),
-                Text(message!,style: AppTextStyle.subtitleS2,)
+                CircularProgressIndicator(),
+                // const Gap(16),
+                // Text(message!,style: AppTextStyle.subtitleS2,)
               ],
             ),
           ),

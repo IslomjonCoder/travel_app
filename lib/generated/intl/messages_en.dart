@@ -26,14 +26,22 @@ class MessageLookup extends MessageLookupByLibrary {
         "areYouSureYouWantToLogout": MessageLookupByLibrary.simpleMessage(
             "Are you sure you want to logout?"),
         "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+        "failedToAddReview":
+            MessageLookupByLibrary.simpleMessage("Failed to add review"),
         "favourite": MessageLookupByLibrary.simpleMessage("Favourite"),
         "home": MessageLookupByLibrary.simpleMessage("Home"),
         "language": MessageLookupByLibrary.simpleMessage("Language"),
         "logout": MessageLookupByLibrary.simpleMessage("Logout"),
         "map": MessageLookupByLibrary.simpleMessage("Map"),
         "notifications": MessageLookupByLibrary.simpleMessage("Notifications"),
+        "pleaseEnterSomeText":
+            MessageLookupByLibrary.simpleMessage("Please enter some text"),
         "settings": MessageLookupByLibrary.simpleMessage("Settings"),
+        "submit": MessageLookupByLibrary.simpleMessage("Submit"),
         "termsAndConditions":
-            MessageLookupByLibrary.simpleMessage("Terms and conditions")
+            MessageLookupByLibrary.simpleMessage("Terms and conditions"),
+        "typeSomething": MessageLookupByLibrary.simpleMessage("Type something"),
+        "writeYourReviewHere":
+            MessageLookupByLibrary.simpleMessage("Write your review here")
       };
 }

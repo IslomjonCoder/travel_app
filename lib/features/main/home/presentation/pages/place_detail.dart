@@ -1,3 +1,4 @@
+import 'package:awesome_extensions/awesome_extensions.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,6 +13,8 @@ import 'package:travel_app/core/helpers/location.dart';
 import 'package:travel_app/features/main/favourite/presentation/manager/favourite_cubit.dart';
 import 'package:travel_app/features/main/home/data/models/place_model.dart';
 import 'package:travel_app/features/main/home/presentation/manager/detail/place_detail_cubit.dart';
+import 'package:travel_app/features/main/home/presentation/pages/review_screen.dart';
+import 'package:travel_app/features/main/home/presentation/pages/review_see_all_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PlaceDetail extends StatelessWidget {
@@ -63,9 +66,9 @@ class PlaceDetailBottomNavBar extends StatelessWidget {
             ),
             onPressed: () async {
               context.read<FavouriteCubit>().toggleFavourite(place);
-
             },
-            icon: Icon(context.watch<FavouriteCubit>().isFavourite(place) ? Icons.favorite : Icons.favorite_border, color: context.watch<FavouriteCubit>().isFavourite(place) ? Colors.red : null),
+            icon: Icon(context.watch<FavouriteCubit>().isFavourite(place) ? Icons.favorite : Icons.favorite_border,
+                color: context.watch<FavouriteCubit>().isFavourite(place) ? Colors.red : null),
           ),
           const Gap(8),
           Expanded(
@@ -77,6 +80,16 @@ class PlaceDetailBottomNavBar extends StatelessWidget {
                     await launchUrl(uri);
                   },
                   child: const Text('Navigate'))),
+          const Gap(8),
+          IconButton.outlined(
+            style: IconButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0),
+              ),
+            ),
+            onPressed: () async => context.push(ReviewAddScreen(place: place)),
+            icon: const Icon(Icons.comment),
+          ),
         ],
       ),
     );
@@ -84,7 +97,7 @@ class PlaceDetailBottomNavBar extends StatelessWidget {
 }
 
 class ReviewsSection extends StatelessWidget {
-  final PlaceEntity place;
+  final PlaceModel place;
 
   const ReviewsSection({super.key, required this.place});
 
@@ -97,7 +110,9 @@ class ReviewsSection extends StatelessWidget {
           children: [
             const Text("Reviews", style: AppTextStyle.headlineSemiboldH6),
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                context.push(ReviewSeeAllScreen(place: place));
+              },
               child: Text("See all", style: AppTextStyle.bodyB2.copyWith(color: AppColors.greyscale400)),
             ),
           ],
