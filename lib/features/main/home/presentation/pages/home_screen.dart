@@ -74,7 +74,15 @@ class HomeScreen extends StatelessWidget {
               itemCount: state.regions.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  title: Text(state.regions[index].name),
+                  title: FutureBuilder(
+                    future: GoogleTranslator().translate(state.regions[index].name, to: 'uz', from: 'en'),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return  Skeletonizer(child: Text(state.regions[index].name));
+                      }
+                      return Text(snapshot.data?.text ?? state.regions[index].name);
+                    },
+                  ),
                   onTap: () {
                     final List<PlaceModel> filteredPlaces = context
                         .read<PlaceCubit>()

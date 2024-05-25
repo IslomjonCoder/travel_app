@@ -37,60 +37,85 @@ class _NavigationScreenState extends State<NavigationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (context) => NavigationCubit()),
-        BlocProvider(create: (context) => BannerCubit(BannerRepository(BannerDataSourceImpl()))..getBanners()),
-        BlocProvider(create: (context) => CategoryCubit(CategoryRepository(CategoryDataSourceImpl()))..getCategories()),
-        BlocProvider(create: (context) => PlaceCubit(PlaceRepository(PlaceDataSourceImpl()))..getPlaces()),
-        BlocProvider(create: (context) => CategoryIndexCubit()),
-        // BlocProvider(create: (context) => SearchBloc(PlaceRepository(PlaceDataSourceImpl()))),
-        BlocProvider(create: (context) => FavouriteCategoryCubit()),
-        BlocProvider(create: (context) => RegionCubit(RegionRepositoryImpl(RegionDataSourceImpl()))..getRegions(), lazy: false,),
-        BlocProvider(create: (context) => FavouriteCubit(FavouritesService())..getFavourites()),
-      ],
-      child: BlocBuilder<NavigationCubit, int>(
-        builder: (context, index) {
-          return Scaffold(
-            body: IndexedStack(
-              index: index,
-              children:  [
-                HomeScreen(),
-                const MapScreen(),
-                const FavouriteScreen(),
-                const SettingsScreen(),
-              ],
-            ),
-            bottomNavigationBar: Localizations.override(
-              context: context,
-              child: BottomNavigationBar(
-                unselectedItemColor: AppColors.greyscale400,
-                selectedItemColor: AppColors.brandColor500Default,
-                onTap: (value) => context.read<NavigationCubit>().changePage(value),
-                currentIndex: index,
-                type: BottomNavigationBarType.fixed,
-                items: <BottomNavigationBarItem>[
-                  BottomNavigationBarItem(
-                    icon: const Icon(Icons.home),
-                    label: S.of(context).home,
-                  ),
-                  BottomNavigationBarItem(
-                    icon: const Icon(Icons.map),
-                    label: S.of(context).map,
-                  ),
-                  BottomNavigationBarItem(
-                    icon: const Icon(Icons.favorite),
-                    label: S.of(context).favourite,
-                  ),
-                  BottomNavigationBarItem(
-                    icon: const Icon(Icons.settings),
-                    label: S.of(context).settings,
-                  ),
+    return PopScope(
+      onPopInvoked: (value) {
+        showDialog(
+          context: context,
+          builder: (context) =>  AlertDialog(
+            title: const Text('Are you sure?'),
+            content: const Text('Do you want to exit the app?'),
+            actions: [
+              TextButton(
+                child: const Text('No'),
+                onPressed: () => Navigator.of(context).pop,
+              ),
+              TextButton(
+                child: const Text('Yes'),
+                onPressed: () => Navigator.of(context).pop(true),
+              ),
+            ],
+          ),
+        );
+      },
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (context) => NavigationCubit()),
+          BlocProvider(create: (context) => BannerCubit(BannerRepository(BannerDataSourceImpl()))..getBanners()),
+          BlocProvider(
+              create: (context) => CategoryCubit(CategoryRepository(CategoryDataSourceImpl()))..getCategories()),
+          BlocProvider(create: (context) => PlaceCubit(PlaceRepository(PlaceDataSourceImpl()))..getPlaces()),
+          BlocProvider(create: (context) => CategoryIndexCubit()),
+          // BlocProvider(create: (context) => SearchBloc(PlaceRepository(PlaceDataSourceImpl()))),
+          BlocProvider(create: (context) => FavouriteCategoryCubit()),
+          BlocProvider(
+            create: (context) => RegionCubit(RegionRepositoryImpl(RegionDataSourceImpl()))..getRegions(),
+            lazy: false,
+          ),
+          BlocProvider(create: (context) => FavouriteCubit(FavouritesService())..getFavourites()),
+        ],
+        child: BlocBuilder<NavigationCubit, int>(
+          builder: (context, index) {
+            return Scaffold(
+              body: IndexedStack(
+                index: index,
+                children: [
+                  HomeScreen(),
+                  const MapScreen(),
+                  const FavouriteScreen(),
+                  const SettingsScreen(),
                 ],
               ),
-            ),
-          );
-        },
+              bottomNavigationBar: Localizations.override(
+                context: context,
+                child: BottomNavigationBar(
+                  unselectedItemColor: AppColors.greyscale400,
+                  selectedItemColor: AppColors.brandColor500Default,
+                  onTap: (value) => context.read<NavigationCubit>().changePage(value),
+                  currentIndex: index,
+                  type: BottomNavigationBarType.fixed,
+                  items: <BottomNavigationBarItem>[
+                    BottomNavigationBarItem(
+                      icon: const Icon(Icons.home),
+                      label: S.of(context).home,
+                    ),
+                    BottomNavigationBarItem(
+                      icon: const Icon(Icons.map),
+                      label: S.of(context).map,
+                    ),
+                    BottomNavigationBarItem(
+                      icon: const Icon(Icons.favorite),
+                      label: S.of(context).favourite,
+                    ),
+                    BottomNavigationBarItem(
+                      icon: const Icon(Icons.settings),
+                      label: S.of(context).settings,
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
       ),
     );
   }
