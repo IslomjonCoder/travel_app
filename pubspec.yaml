@@ -40,6 +40,8 @@ dependencies:
   dev: ^1.0.0
   rate_in_stars: ^0.0.3
   flutter_rating_stars: ^1.1.0
+  rxdart: ^0.27.7
+  translator: ^1.0.0
 
 dev_dependencies:
   flutter_test:

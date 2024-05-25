@@ -7,15 +7,19 @@ import 'package:gap/gap.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+import 'package:translator/translator.dart';
 import 'package:travel_app/core/constants/colors.dart';
 import 'package:travel_app/core/constants/images.dart';
 import 'package:travel_app/core/constants/text_styles.dart';
 import 'package:travel_app/core/helpers/location.dart';
 import 'package:travel_app/features/main/favourite/presentation/manager/favourite_cubit.dart';
 import 'package:travel_app/features/main/home/data/models/place_model.dart';
+import 'package:travel_app/features/main/home/presentation/manager/category/category_cubit.dart';
 import 'package:travel_app/features/main/home/presentation/manager/detail/place_detail_cubit.dart';
 import 'package:travel_app/features/main/home/presentation/pages/review_screen.dart';
 import 'package:travel_app/features/main/home/presentation/pages/review_see_all_screen.dart';
+import 'package:travel_app/features/main/settings/presentation/manager/settings/settings_cubit.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PlaceDetail extends StatelessWidget {
@@ -181,10 +185,30 @@ class PlaceDescription extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final settingsCubit = context.watch<SettingsCubit>();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(place.name, style: AppTextStyle.headlineSemiboldH4),
+FutureBuilder(
+  initialData: place.name,
+  future: GoogleTranslator()
+      .translate(place.name, to: settingsCubit.state.language.locale.languageCode, from: "en"),
+  builder: (BuildContext context, AsyncSnapshot snapshot) {
+    if (snapshot.connectionState == ConnectionState.waiting) {
+      return Skeletonizer(
+        child: Text(
+          place.name,
+          style: AppTextStyle.headlineSemiboldH6,
+        ),
+      );
+    }
+    return Text(
+      snapshot.data.text ?? place.name,
+      style: AppTextStyle.headlineSemiboldH6,
+    );
+  },
+),
         const Gap(8),
         Row(
           children: [
@@ -195,7 +219,25 @@ class PlaceDescription extends StatelessWidget {
               fit: BoxFit.scaleDown,
             ),
             const Gap(4),
-            Text(place.region.name, style: AppTextStyle.subtitleS1Medium),
+            FutureBuilder(
+              initialData: place.region.name,
+              future: GoogleTranslator()
+                  .translate(place.region.name, to: settingsCubit.state.language.locale.languageCode, from: "en"),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Skeletonizer(
+                    child: Text(
+                      place.region.name,
+                      style: AppTextStyle.subtitleS2Medium,
+                    ),
+                  );
+                }
+                return Text(
+                  snapshot.data.text ?? place.region.name,
+                  style: AppTextStyle.subtitleS2Medium,
+                );
+              },
+            ),
           ],
         ),
         const Gap(8),
@@ -217,9 +259,24 @@ class PlaceDescription extends StatelessWidget {
           children: [
             const Text("Description", style: AppTextStyle.headlineSemiboldH6),
             const Gap(8),
-            Text(
-              place.description,
-              style: AppTextStyle.bodyB2.copyWith(color: AppColors.greyscale400),
+            FutureBuilder(
+              initialData:  place.description,
+              future: GoogleTranslator()
+                  .translate(place.description, to: settingsCubit.state.language.locale.languageCode, from: "en"),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Skeletonizer(
+                    child: Text(
+                      place.description,
+                      style: AppTextStyle.bodyB1,
+                    ),
+                  );
+                }
+                return Text(
+                  snapshot.data.text ?? place.description,
+                  style: AppTextStyle.bodyB1,
+                );
+              },
             ),
           ],
         ),

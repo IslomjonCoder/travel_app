@@ -38,4 +38,18 @@ class PlaceRepository {
   getAllPlaces() {
     return placeModels;
   }
+
+  Future<Either<Failure, List<PlaceModel>>> searchPlaces(String query) async {
+    try {
+      final response = await placeDataSource.searchPlace(query);
+      return right(response);
+    } on PostgrestException catch (e) {
+      return left(Failure(message: e.message));
+    } on FormatException catch (e) {
+      print(e);
+      return left(Failure(message: e.message));
+    } catch (e) {
+      return left(Failure(message: e.toString()));
+    }
+  }
 }

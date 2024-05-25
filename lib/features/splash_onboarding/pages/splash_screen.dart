@@ -53,7 +53,7 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
               const Gap(16),
               Text(
-                'Uzbekistan Travel',
+                'Visit Uzbekistan',
                 style: AppTextStyle.headlineSemiboldH4.copyWith(color: AppColors.greyscale600),
                 textAlign: TextAlign.center,
               ),

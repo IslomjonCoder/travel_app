@@ -7,6 +7,7 @@ import 'package:formz/formz.dart';
 import 'package:gap/gap.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:translator/translator.dart';
 import 'package:travel_app/core/constants/colors.dart';
 import 'package:travel_app/core/constants/images.dart';
 import 'package:travel_app/core/constants/text_styles.dart';
@@ -19,41 +20,49 @@ import 'package:travel_app/features/main/home/presentation/manager/category/cate
 import 'package:travel_app/features/main/home/presentation/manager/category_index/category_index_cubit.dart';
 import 'package:travel_app/features/main/home/presentation/manager/place/place_cubit.dart';
 import 'package:travel_app/features/main/home/presentation/manager/region/region_cubit.dart';
+import 'package:travel_app/features/main/home/presentation/manager/search/search_bloc.dart';
 import 'package:travel_app/features/main/home/presentation/pages/place_detail.dart';
 import 'package:travel_app/features/main/home/presentation/pages/region_detail_screen.dart';
+import 'package:travel_app/features/main/home/presentation/pages/search_screen.dart';
+import 'package:travel_app/features/main/settings/presentation/manager/settings/settings_cubit.dart';
 import 'package:travel_app/main.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  HomeScreen({super.key});
+
+  final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          // final response = await supabase.from('places').select().single();
-          // final wkbHex = response['location'] as String;
-          // final pointFromWKB = Point.decodeHex(wkbHex);
-          // await supabase.from('places').insert({
-          //   'location': 'POINT(41.34785176305069 69.2850566282956)',
-          //   'name': "Besh Qozon",
-          //   'description':
-          //       """Besh qozon 'https://beshqozon.uz/uz/'""",
-          //   "category_id": 5,
-          //   "region_id": 2,
-          //   "time": "09:00-23:00"
-          //
-          // });
-          final response = await supabase.from('places').select('*,regions(*) ,categories(*),images(path), reviews(*,profile(*))');
-          print(response);
-          final List<PlaceModel> places = response.map((e) => PlaceModel.fromMap(e)).toList();
-          // print("inserted");
-          // context.read<PlaceCubit>().getAllPlaces();
-        },
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () async {
+      //     // final translator = context.read<CategoryCubit>().translator;
+      //
+      //     // await translator.translate('hello', to: 'uz').then((value) => print(value));
+      //   },
+      // ),
+      key: scaffoldKey,
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+     scaffoldKey.currentState?.openDrawer();
+          },
+          icon: const Icon(Icons.maps_home_work_outlined),
+        ),
         centerTitle: true,
         title: const Text('Home'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              context.push(BlocProvider.value(
+                value: BlocProvider.of<FavouriteCubit>(context),
+                child: const SearchScreen(),
+              ));
+            },
+            icon: const Icon(Icons.search),
+          ),
+        ],
       ),
       drawer: Drawer(
         //   using region cubit show all regions
@@ -188,6 +197,7 @@ class CategoryListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final settingsCubit = context.watch<SettingsCubit>();
     return InkWell(
       onTap: () => onTap(index),
       borderRadius: BorderRadius.circular(20),
@@ -207,7 +217,15 @@ class CategoryListItem extends StatelessWidget {
                 ? CachedNetworkImage(imageUrl: category.image, width: 20, height: 20, fit: BoxFit.cover)
                 : const Text('oo'),
             const Gap(4),
-            Text(category.name, style: AppTextStyle.subtitleS2Medium),
+            FutureBuilder(
+                future: context
+                    .read<CategoryCubit>()
+                    .translator
+                    .translate(category.name, to: settingsCubit.state.language.locale.languageCode, from: "en"),
+                builder: (context, snapshot) {
+                  print(snapshot.data);
+                  return Text(snapshot.data?.text ?? category.name, style: AppTextStyle.otherCaption);
+                }),
           ],
         ),
       ),
@@ -300,10 +318,14 @@ class FeaturedPlaceItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final settingsCubit = context.watch<SettingsCubit>();
     return InkWell(
       onTap: () => context.push(BlocProvider.value(
-        value: context.read<FavouriteCubit>(),
-        child: PlaceDetail(place: place),
+        value: context.read<CategoryCubit>(),
+        child: BlocProvider.value(
+          value: context.read<FavouriteCubit>(),
+          child: PlaceDetail(place: place),
+        ),
       )),
       child: Column(
         children: [
@@ -334,9 +356,15 @@ class FeaturedPlaceItem extends StatelessWidget {
                         end: Alignment.bottomCenter,
                       ),
                     ),
-                    child: Text(
-                      place.name,
-                      style: AppTextStyle.subtitleS1.copyWith(color: Colors.white),
+                    child: FutureBuilder(
+                      future: GoogleTranslator()
+                          .translate(place.name, to: settingsCubit.state.language.locale.languageCode, from: "en"),
+                      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                        return Text(
+                          snapshot.data?.text ?? place.name,
+                          style: AppTextStyle.subtitleS1.copyWith(color: Colors.white),
+                        );
+                      },
                     ),
                   ),
                 ),
@@ -354,7 +382,16 @@ class FeaturedPlaceItem extends StatelessWidget {
                     height: 16,
                   ),
                   const Gap(4),
-                  Text(place.region.name, style: AppTextStyle.subtitleS2Medium),
+                  FutureBuilder(
+                    future: GoogleTranslator()
+                        .translate(place.region.name, to: settingsCubit.state.language.locale.languageCode, from: "en"),
+                    builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                      return Text(
+                        snapshot.data?.text ?? place.region.name,
+                        style: AppTextStyle.subtitleS2,
+                      );
+                    },
+                  ),
                 ],
               ),
               const Gap(4),

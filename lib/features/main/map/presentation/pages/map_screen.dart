@@ -9,6 +9,7 @@ import 'package:google_maps_cluster_manager_2/google_maps_cluster_manager_2.dart
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:travel_app/core/helpers/location.dart';
+import 'package:travel_app/features/main/favourite/presentation/manager/favourite_cubit.dart';
 import 'package:travel_app/features/main/home/data/models/category_model.dart';
 import 'package:travel_app/features/main/home/data/models/place_model.dart';
 import 'package:travel_app/features/main/home/presentation/manager/place/place_cubit.dart';
@@ -66,7 +67,9 @@ class _MapScreenState extends State<MapScreen> {
   Future<Marker> Function(Cluster<PlaceMarKerModel>) get _markerBuilder => (cluster) async {
         final icon = cluster.isMultiple
             ? await _getClusterIcon(cluster.count)
-            : await _getCategoryIcon(cluster.items.first.place.images.isEmpty ? cluster.items.first.category.image : cluster.items.first.place.images.first);
+            : await _getCategoryIcon(cluster.items.first.place.images.isEmpty
+                ? cluster.items.first.category.image
+                : cluster.items.first.place.images.first);
         return Marker(
           markerId: MarkerId(cluster.getId()),
           position: cluster.location,
@@ -158,7 +161,10 @@ class _MapScreenState extends State<MapScreen> {
   void _onMarkerTap(PlaceMarKerModel placeMarker) {
     // Handle marker tap
     // For example, navigate to detail screen or show more info
-    context.push(PlaceDetail(place: placeMarker.place));
+    context.push(BlocProvider.value(
+      value: context.read<FavouriteCubit>(),
+      child: PlaceDetail(place: placeMarker.place),
+    ));
   }
 
   @override
@@ -172,7 +178,6 @@ class _MapScreenState extends State<MapScreen> {
           setState(() {});
         },
         child: GoogleMap(
-
           initialCameraPosition: _parisCameraPosition,
           onMapCreated: (controller) {
             _controller = controller;
