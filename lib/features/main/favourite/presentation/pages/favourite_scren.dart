@@ -31,7 +31,7 @@ class FavouriteScreen extends StatelessWidget {
                 .getPlacesListByCategory(context.read<CategoryCubit>().state.categories[state].id);
           }
         },
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
@@ -40,85 +40,84 @@ class FavouriteScreen extends StatelessWidget {
                 selectedIndex: context.watch<FavouriteCategoryCubit>().state,
               ),
               const Gap(16),
-              Expanded(
-                child: BlocBuilder<FavouriteCubit, FavouriteState>(
-                  builder: (context, state) {
-                    if (state.places.isEmpty) {
-                      return const Center(child: Text('No Favourites', style: AppTextStyle.headlineSemiboldH5));
-                    }
-                    return ListView.separated(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        final place = state.places[index];
-                        return InkWell(
-                          onTap: () => context.push(BlocProvider.value(
-                            value: context.read<FavouriteCubit>(),
-                            child: PlaceDetail(place: state.places[index]),
-                          )),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              AspectRatio(
-                                aspectRatio: 1.6,
-                                child: Stack(
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(12.0),
-                                        image: DecorationImage(
-                                          image: CachedNetworkImageProvider(state.places[index].images.isEmpty
-                                              ? AppImages.imagePlaceHolder
-                                              : state.places[index].images.first),
-                                          fit: BoxFit.cover,
-                                        ),
+              BlocBuilder<FavouriteCubit, FavouriteState>(
+                builder: (context, state) {
+                  if (state.places.isEmpty) {
+                    return const Center(child: Text('No Favourites', style: AppTextStyle.headlineSemiboldH5));
+                  }
+                  return ListView.separated(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      final place = state.places[index];
+                      return InkWell(
+                        onTap: () => context.push(BlocProvider.value(
+                          value: context.read<FavouriteCubit>(),
+                          child: PlaceDetail(place: state.places[index]),
+                        )),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            AspectRatio(
+                              aspectRatio: 1.6,
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12.0),
+                                      image: DecorationImage(
+                                        image: CachedNetworkImageProvider(state.places[index].images.isEmpty
+                                            ? AppImages.imagePlaceHolder
+                                            : state.places[index].images.first),
+                                        fit: BoxFit.cover,
                                       ),
                                     ),
-                                    Positioned(
-                                      top: 8,
-                                      right: 8,
-                                      child: IconButton.filled(
-                                        style: IconButton.styleFrom(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(12.0),
-                                          ),
-                                          foregroundColor: Colors.white,
-                                          backgroundColor: Colors.black.withOpacity(0.5),
+                                  ),
+                                  Positioned(
+                                    top: 8,
+                                    right: 8,
+                                    child: IconButton.filled(
+                                      style: IconButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(12.0),
                                         ),
-                                        onPressed: () {},
-                                        icon: const Icon(
-                                          Icons.favorite,
-                                          color: Colors.red,
-                                        ),
+                                        foregroundColor: Colors.white,
+                                        backgroundColor: Colors.black.withOpacity(0.5),
                                       ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Text(place.name, style: AppTextStyle.headlineMediumH6),
-                              const Gap(8),
-                              Row(
-                                children: [
-                                  SvgPicture.asset(AppImages.locationMarker, height: 16, width: 16),
-                                  Text(place.location, style: AppTextStyle.subtitleS1),
+                                      onPressed: () {},
+                                      icon: const Icon(
+                                        Icons.favorite,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  )
                                 ],
                               ),
-                              const Gap(8),
-                              Row(
-                                children: [
-                                  SvgPicture.asset(AppImages.clock, height: 16, width: 16),
-                                  Text(place.time, style: AppTextStyle.subtitleS1),
-                                ],
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                      separatorBuilder: (context, index) => const Gap(16),
-                      itemCount: state.places.length,
-                    );
-                  },
-                ),
+                            ),
+                            Text(place.name, style: AppTextStyle.headlineMediumH6),
+                            const Gap(8),
+                            Row(
+                              children: [
+                                SvgPicture.asset(AppImages.locationMarker, height: 16, width: 16),
+                                Text(place.region.name, style: AppTextStyle.subtitleS1),
+                              ],
+                            ),
+                            const Gap(8),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SvgPicture.asset(AppImages.clock, height: 16, width: 16),
+                                Text(place.time, style: AppTextStyle.subtitleS1),
+                              ],
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                    separatorBuilder: (context, index) => const Gap(16),
+                    itemCount: state.places.length,
+                  );
+                },
               )
             ],
           ),

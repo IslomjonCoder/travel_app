@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:travel_app/core/constants/colors.dart';
 import 'package:travel_app/core/constants/images.dart';
@@ -37,7 +38,7 @@ class PlaceDetail extends StatelessWidget {
               const Gap(16),
               PlaceDescription(place: place),
               const Gap(16),
-              ReviewsSection(place: place),
+              if (place.review.isNotEmpty) ReviewsSection(place: place),
             ],
           ),
         ),
@@ -121,46 +122,52 @@ class ReviewsSection extends StatelessWidget {
         ListView.separated(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          itemBuilder: (context, index) => Column(
-            children: [
-              Row(
-                children: [
-                  const CircleAvatar(
-                    radius: 24,
-                  ),
-                  const Gap(8),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        const Text(
-                          'Oscar Rogers',
-                          style: AppTextStyle.subtitleS1,
-                        ),
-                        Text(
-                          '29 Aug 2022',
-                          style: AppTextStyle.subtitleS2.copyWith(color: AppColors.greyscale400),
-                        ),
-                      ],
+          itemBuilder: (context, index) {
+            final comment = place.review[index];
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
+                  children: [
+                    const CircleAvatar(
+                      radius: 24,
                     ),
-                  ),
-                  Row(
-                    children: List.generate(
-                      5,
-                      (index) => Icon(Icons.star, color: Colors.yellow.shade800, size: 16),
+                    const Gap(8),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Text(
+                            comment.profile.name,
+                            style: AppTextStyle.subtitleS1,
+                          ),
+                          Text(
+                            DateFormat('yyyy-MM-dd').format(comment.createdAt),
+                            style: AppTextStyle.subtitleS2.copyWith(color: AppColors.greyscale400),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              const Gap(8),
-              Text(
-                'Bibendum sit eu morbi velit praesent. Fermentum mauris fringilla vitae feugiat vel sit blandit quam. In mi sodales nisl eleifend duis porttitor. Convallis euismod facilisis neque eget praesent diam in nulla. Faucibus interdum vulputate rhoncus mauris id facilisis est nunc habitant. Velit posuere facilisi tortor sed.',
-                style: AppTextStyle.otherCaption.copyWith(color: AppColors.greyscale400),
-              ),
-            ],
-          ),
+                    Row(
+                      children: List.generate(
+                        5,
+                        (index) => Icon(Icons.star,
+                            color: index < comment.rating ? Colors.yellow.shade800 : Colors.grey, size: 16),
+                      ),
+                    ),
+                  ],
+                ),
+                const Gap(8),
+                Text(
+                  textAlign: TextAlign.start,
+                  comment.text,
+                  style: AppTextStyle.otherCaption.copyWith(color: AppColors.greyscale400),
+                ),
+              ],
+            );
+          },
           separatorBuilder: (context, index) => const Gap(8),
-          itemCount: 3,
+          itemCount: place.review.length,
         ),
       ],
     );
