@@ -54,8 +54,8 @@ class MyApp extends StatelessWidget {
         ),
       ),
       // TODO: Remove this
-      // home:  const SplashScreen(),
-      home:  const NavigationScreen(),
+      home:  const SplashScreen(),
+      // home:  const NavigationScreen(),
       localizationsDelegates: const [
         S.delegate,
         GlobalMaterialLocalizations.delegate,

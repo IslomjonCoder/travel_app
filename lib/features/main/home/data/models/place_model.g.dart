@@ -25,13 +25,14 @@ class PlaceModelAdapter extends TypeAdapter<PlaceModel> {
       region: fields[7] as Region,
       images: (fields[1] as List).cast<String>(),
       category: fields[2] as CategoryModel,
+      review: fields[8] as ReviewModel,
     );
   }
 
   @override
   void write(BinaryWriter writer, PlaceModel obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -47,7 +48,9 @@ class PlaceModelAdapter extends TypeAdapter<PlaceModel> {
       ..writeByte(6)
       ..write(obj.time)
       ..writeByte(7)
-      ..write(obj.region);
+      ..write(obj.region)
+      ..writeByte(8)
+      ..write(obj.review);
   }
 
   @override

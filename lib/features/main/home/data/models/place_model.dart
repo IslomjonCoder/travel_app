@@ -43,6 +43,8 @@ class PlaceModel extends PlaceEntity {
   @HiveField(7)
   @override
   final Region region;
+  @HiveField(8)
+  @override
   final ReviewModel review;
 
   PlaceModel({
@@ -56,12 +58,12 @@ class PlaceModel extends PlaceEntity {
     required this.category,
     required this.review,
   }) : super(
-    name: name,
-    description: description,
-    location: location,
-    time: time,
-    region: region,
-  );
+          name: name,
+          description: description,
+          location: location,
+          time: time,
+          region: region,
+        );
 
   PlaceModel.empty()
       : this(
@@ -89,7 +91,8 @@ class PlaceModel extends PlaceEntity {
         time: map['time'] as String,
         region: Region.fromMap(map['regions'] as Map<String, dynamic>),
         images: List<String>.from((map['images'] as List).map((e) => e['path'])),
-        category: CategoryModel.fromMap(map['categories'] as Map<String, dynamic>), review: ReviewModel.fromMap(map['reviews'] as Map<String, dynamic>));
+        category: CategoryModel.fromMap(map['categories'] as Map<String, dynamic>),
+        review: ReviewModel.fromMap(map['reviews'] as Map<String, dynamic>));
   }
 
   @override
@@ -104,6 +107,7 @@ class PlaceModel extends PlaceEntity {
   @override
   int get hashCode => id.hashCode ^ images.hashCode ^ category.hashCode;
 }
+
 @HiveType(typeId: 2)
 class Region {
   @HiveField(0)
