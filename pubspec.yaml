@@ -42,6 +42,7 @@ dependencies:
   flutter_rating_stars: ^1.1.0
   rxdart: ^0.27.7
   translator: ^1.0.0
+  rename_app: ^1.3.2
 
 dev_dependencies:
   flutter_test:
