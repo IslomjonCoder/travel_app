@@ -47,71 +47,73 @@ class FavouriteScreen extends StatelessWidget {
                       return const Center(child: Text('No Favourites', style: AppTextStyle.headlineSemiboldH5));
                     }
                     return ListView.separated(
-
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) => InkWell(
-                        onTap: () => context.push(BlocProvider.value(
-                          value: context.read<FavouriteCubit>(),
-                          child: PlaceDetail(place: state.places[index]),
-                        )),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            AspectRatio(
-                              aspectRatio: 1.6,
-                              child: Stack(
-                                children: [
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(12.0),
-                                      image: DecorationImage(
-                                        image: CachedNetworkImageProvider(state.places[index].images.isEmpty
-                                            ? AppImages.imagePlaceHolder
-                                            : state.places[index].images.first),
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    top: 8,
-                                    right: 8,
-                                    child: IconButton.filled(
-                                      style: IconButton.styleFrom(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(12.0),
+                      itemBuilder: (context, index) {
+                        final place = state.places[index];
+                        return InkWell(
+                          onTap: () => context.push(BlocProvider.value(
+                            value: context.read<FavouriteCubit>(),
+                            child: PlaceDetail(place: state.places[index]),
+                          )),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              AspectRatio(
+                                aspectRatio: 1.6,
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12.0),
+                                        image: DecorationImage(
+                                          image: CachedNetworkImageProvider(state.places[index].images.isEmpty
+                                              ? AppImages.imagePlaceHolder
+                                              : state.places[index].images.first),
+                                          fit: BoxFit.cover,
                                         ),
-                                        foregroundColor: Colors.white,
-                                        backgroundColor: Colors.black.withOpacity(0.5),
-                                      ),
-                                      onPressed: () {},
-                                      icon: const Icon(
-                                        Icons.favorite,
-                                        color: Colors.red,
                                       ),
                                     ),
-                                  )
+                                    Positioned(
+                                      top: 8,
+                                      right: 8,
+                                      child: IconButton.filled(
+                                        style: IconButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(12.0),
+                                          ),
+                                          foregroundColor: Colors.white,
+                                          backgroundColor: Colors.black.withOpacity(0.5),
+                                        ),
+                                        onPressed: () {},
+                                        icon: const Icon(
+                                          Icons.favorite,
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Text(place.name, style: AppTextStyle.headlineMediumH6),
+                              const Gap(8),
+                              Row(
+                                children: [
+                                  SvgPicture.asset(AppImages.locationMarker, height: 16, width: 16),
+                                  Text(place.location, style: AppTextStyle.subtitleS1),
                                 ],
                               ),
-                            ),
-                            Text(PlaceRepository.places.first.name, style: AppTextStyle.headlineMediumH6),
-                            const Gap(8),
-                            Row(
-                              children: [
-                                SvgPicture.asset(AppImages.locationMarker, height: 16, width: 16),
-                                Text(PlaceRepository.places.first.location, style: AppTextStyle.subtitleS1),
-                              ],
-                            ),
-                            const Gap(8),
-                            Row(
-                              children: [
-                                SvgPicture.asset(AppImages.clock, height: 16, width: 16),
-                                Text(PlaceRepository.places.first.time, style: AppTextStyle.subtitleS1),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
+                              const Gap(8),
+                              Row(
+                                children: [
+                                  SvgPicture.asset(AppImages.clock, height: 16, width: 16),
+                                  Text(place.time, style: AppTextStyle.subtitleS1),
+                                ],
+                              ),
+                            ],
+                          ),
+                        );
+                      },
                       separatorBuilder: (context, index) => const Gap(16),
                       itemCount: state.places.length,
                     );

@@ -25,7 +25,7 @@ class PlaceModelAdapter extends TypeAdapter<PlaceModel> {
       region: fields[7] as Region,
       images: (fields[1] as List).cast<String>(),
       category: fields[2] as CategoryModel,
-      review: fields[8] as ReviewModel,
+      review: (fields[8] as List).cast<ReviewModel>(),
     );
   }
 

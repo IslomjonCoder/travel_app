@@ -8,11 +8,11 @@ abstract class PlaceDataSource {
 class PlaceDataSourceImpl implements PlaceDataSource {
   @override
   Future<List<PlaceModel>> getPlaces() async {
-    try {
-      final response = await supabase.from('places').select('*,regions(*) ,categories(*),images(path)');
-      return response.map((e) => PlaceModel.fromMap(e)).toList();
-    } catch (e) {
-      rethrow;
-    }
+    // try {
+    final response = await supabase.from('places').select('*,regions(*) ,categories(*),images(path), reviews(*,profile(*))');
+    return response.map((e) => PlaceModel.fromMap(e)).toList();
+    // } catch (e) {
+    //   rethrow;
+    // }
   }
 }

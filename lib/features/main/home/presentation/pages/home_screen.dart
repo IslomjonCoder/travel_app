@@ -34,17 +34,20 @@ class HomeScreen extends StatelessWidget {
           // final response = await supabase.from('places').select().single();
           // final wkbHex = response['location'] as String;
           // final pointFromWKB = Point.decodeHex(wkbHex);
-          await supabase.from('places').insert({
-            'location': 'POINT(41.34785176305069 69.2850566282956)',
-            'name': "Besh Qozon",
-            'description':
-                """Besh qozon 'https://beshqozon.uz/uz/'""",
-            "category_id": 5,
-            "region_id": 2,
-            "time": "09:00-23:00"
-
-          });
-          print("inserted");
+          // await supabase.from('places').insert({
+          //   'location': 'POINT(41.34785176305069 69.2850566282956)',
+          //   'name': "Besh Qozon",
+          //   'description':
+          //       """Besh qozon 'https://beshqozon.uz/uz/'""",
+          //   "category_id": 5,
+          //   "region_id": 2,
+          //   "time": "09:00-23:00"
+          //
+          // });
+          final response = await supabase.from('places').select('*,regions(*) ,categories(*),images(path), reviews(*,profile(*))');
+          print(response);
+          final List<PlaceModel> places = response.map((e) => PlaceModel.fromMap(e)).toList();
+          // print("inserted");
           // context.read<PlaceCubit>().getAllPlaces();
         },
       ),

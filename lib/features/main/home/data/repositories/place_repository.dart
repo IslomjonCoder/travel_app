@@ -10,71 +10,6 @@ class PlaceRepository {
 
   PlaceRepository(this.placeDataSource);
 
-  static List<PlaceEntity> places = [
-    PlaceEntity(
-      name: "Registan Square",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      location: "Samarkand",
-      time: "8:00 - 17:00",
-      region: Region(id: 0, name: ""),
-    ),
-    PlaceEntity(
-      name: "Tashkent city",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      location: "Tashkent",
-      time: "8:00 - 17:00",
-      region: Region(id: 0, name: ""),
-    ),
-    PlaceEntity(
-      name: "Magic city Park",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      location: "Tashkent",
-      time: "8:00 - 17:00",
-      region: Region(id: 0, name: ""),
-    ),
-    PlaceEntity(
-      name: "Shakhi Zinda",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      location: "Samarkand",
-      time: "8:00 - 17:00",
-      region: Region(id: 0, name: ""),
-    ),
-    PlaceEntity(
-      name: "Humo Arena",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      location: "Tashkent",
-      time: "8:00 - 17:00",
-      region: Region(id: 0, name: ""),
-    ),
-    PlaceEntity(
-      name: "TV Tower",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      location: "Tashkent",
-      time: "8:00 - 17:00",
-      region: Region(id: 0, name: ""),
-    ),
-    PlaceEntity(
-      name: "Besh qozon",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      location: "Tashkent",
-      time: "8:00 - 17:00",
-      region: Region(id: 0, name: ""),
-    ),
-    PlaceEntity(
-      name: "Japan garden",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      location: "Tashkent",
-      time: "8:00 - 17:00",
-      region: Region(id: 0, name: ""),
-    ),
-    PlaceEntity(
-      name: "Bunyodkor stadium",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      location: "Tashkent",
-      time: "8:00 - 17:00",
-      region: Region(id: 0, name: ""),
-    ),
-  ];
 
   List<PlaceModel> placeModels = [];
 
@@ -87,6 +22,7 @@ class PlaceRepository {
     } on PostgrestException catch (e) {
       return left(Failure(message: e.message));
     } on FormatException catch (e) {
+      print(e);
       return left(Failure(message: e.message));
     } catch (e) {
       return left(Failure(message: e.toString()));

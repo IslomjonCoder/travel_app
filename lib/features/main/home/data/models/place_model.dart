@@ -45,7 +45,7 @@ class PlaceModel extends PlaceEntity {
   final Region region;
   @HiveField(8)
   @override
-  final ReviewModel review;
+  final List<ReviewModel> review;
 
   PlaceModel({
     required this.id,
@@ -75,7 +75,7 @@ class PlaceModel extends PlaceEntity {
           region: Region.empty(),
           images: [],
           category: CategoryModel.empty(),
-          review: ReviewModel.empty(),
+          review: const [],
         );
 
   Map<String, dynamic> toMap() => {
@@ -92,7 +92,7 @@ class PlaceModel extends PlaceEntity {
         region: Region.fromMap(map['regions'] as Map<String, dynamic>),
         images: List<String>.from((map['images'] as List).map((e) => e['path'])),
         category: CategoryModel.fromMap(map['categories'] as Map<String, dynamic>),
-        review: ReviewModel.fromMap(map['reviews'] as Map<String, dynamic>));
+        review: List<ReviewModel>.from((map['reviews'] as List).map((e) => ReviewModel.fromMap(e))));
   }
 
   @override
