@@ -23,21 +23,38 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "aboutApp": MessageLookupByLibrary.simpleMessage("Biz haqimizda"),
+        "alreadyHaveAnAccount":
+            MessageLookupByLibrary.simpleMessage("Already have an account?"),
         "areYouSureYouWantToLogout": MessageLookupByLibrary.simpleMessage(
             "Siz rostdan ham chiqmoqchimisiz?"),
         "cancel": MessageLookupByLibrary.simpleMessage("Bekor qilish"),
+        "email": MessageLookupByLibrary.simpleMessage("Email"),
+        "enterYourPassword":
+            MessageLookupByLibrary.simpleMessage("Enter your password"),
         "failedToAddReview": MessageLookupByLibrary.simpleMessage(
             "Izoh qo\'shishda muammo bo\'ldi"),
         "favourite": MessageLookupByLibrary.simpleMessage("Sevimlilar"),
         "home": MessageLookupByLibrary.simpleMessage("Bosh sahifa"),
         "language": MessageLookupByLibrary.simpleMessage("Til"),
+        "logIn": MessageLookupByLibrary.simpleMessage("Log in"),
         "logout": MessageLookupByLibrary.simpleMessage("Chiqish"),
         "map": MessageLookupByLibrary.simpleMessage("Xarita"),
+        "navigate": MessageLookupByLibrary.simpleMessage("Navigate"),
+        "noRegionsFound":
+            MessageLookupByLibrary.simpleMessage("Hududlar topilmadi"),
         "notifications":
             MessageLookupByLibrary.simpleMessage("Bildirishnomalar"),
+        "password": MessageLookupByLibrary.simpleMessage("Password"),
         "pleaseEnterSomeText":
             MessageLookupByLibrary.simpleMessage("Iltimos, matn kiriting"),
+        "pleaseEnterYourPassword":
+            MessageLookupByLibrary.simpleMessage("Please enter your password"),
+        "reviewAddScreen":
+            MessageLookupByLibrary.simpleMessage("Review Add Screen"),
+        "reviews": MessageLookupByLibrary.simpleMessage("Reviews"),
+        "seeAll": MessageLookupByLibrary.simpleMessage("See all"),
         "settings": MessageLookupByLibrary.simpleMessage("Sozlamalar"),
+        "signUp": MessageLookupByLibrary.simpleMessage("Sign up"),
         "submit": MessageLookupByLibrary.simpleMessage("Yuborish"),
         "termsAndConditions":
             MessageLookupByLibrary.simpleMessage("Foydalanish shartlari"),

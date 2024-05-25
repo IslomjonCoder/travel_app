@@ -26,6 +26,7 @@ import 'package:travel_app/features/main/home/presentation/pages/region_detail_s
 import 'package:travel_app/features/main/home/presentation/pages/search_screen.dart';
 import 'package:travel_app/features/main/settings/presentation/manager/settings/settings_cubit.dart';
 import 'package:travel_app/main.dart';
+import 'package:travel_app/generated/l10n.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -51,7 +52,7 @@ class HomeScreen extends StatelessWidget {
           icon: const Icon(Icons.maps_home_work_outlined),
         ),
         centerTitle: true,
-        title: const Text('Home'),
+        title:  Text(S.of(context).home),
         actions: [
           IconButton(
             onPressed: () {

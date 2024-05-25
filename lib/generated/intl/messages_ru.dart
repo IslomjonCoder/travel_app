@@ -23,20 +23,37 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "aboutApp": MessageLookupByLibrary.simpleMessage("О приложении"),
+        "alreadyHaveAnAccount":
+            MessageLookupByLibrary.simpleMessage("Already have an account?"),
         "areYouSureYouWantToLogout": MessageLookupByLibrary.simpleMessage(
             "Вы уверены, что хотите выйти?"),
         "cancel": MessageLookupByLibrary.simpleMessage("Отменить"),
+        "email": MessageLookupByLibrary.simpleMessage("Email"),
+        "enterYourPassword":
+            MessageLookupByLibrary.simpleMessage("Enter your password"),
         "failedToAddReview":
             MessageLookupByLibrary.simpleMessage("Не удалось добавить отзыв"),
         "favourite": MessageLookupByLibrary.simpleMessage("Избранное"),
         "home": MessageLookupByLibrary.simpleMessage("Главная"),
         "language": MessageLookupByLibrary.simpleMessage("Язык"),
+        "logIn": MessageLookupByLibrary.simpleMessage("Log in"),
         "logout": MessageLookupByLibrary.simpleMessage("Выход"),
         "map": MessageLookupByLibrary.simpleMessage("Карта"),
+        "navigate": MessageLookupByLibrary.simpleMessage("Navigate"),
+        "noRegionsFound":
+            MessageLookupByLibrary.simpleMessage("Регион не найден"),
         "notifications": MessageLookupByLibrary.simpleMessage("Уведомления"),
+        "password": MessageLookupByLibrary.simpleMessage("Password"),
         "pleaseEnterSomeText": MessageLookupByLibrary.simpleMessage(
             "Пожалуйста, введите какой-нибудь текст"),
+        "pleaseEnterYourPassword":
+            MessageLookupByLibrary.simpleMessage("Please enter your password"),
+        "reviewAddScreen":
+            MessageLookupByLibrary.simpleMessage("Review Add Screen"),
+        "reviews": MessageLookupByLibrary.simpleMessage("Reviews"),
+        "seeAll": MessageLookupByLibrary.simpleMessage("See all"),
         "settings": MessageLookupByLibrary.simpleMessage("Настройки"),
+        "signUp": MessageLookupByLibrary.simpleMessage("Sign up"),
         "submit": MessageLookupByLibrary.simpleMessage("Отправить"),
         "termsAndConditions":
             MessageLookupByLibrary.simpleMessage("Условия и положения"),

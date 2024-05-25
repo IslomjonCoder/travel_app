@@ -14,6 +14,20 @@
   "typeSomething": "Напишите что-нибудь",
   "writeYourReviewHere": "Напишите свой отзыв здесь",
   "pleaseEnterSomeText": "Пожалуйста, введите какой-нибудь текст",
-  "submit": "Отправить"
-
+  "submit": "Отправить",
+  "noRegionsFound": "Регион не найден",
+  "navigate": "Navigate",
+  "reviews": "Reviews",
+  "seeAll": "See all",
+  "reviewAddScreen": "Review Add Screen",
+  "email": "Email",
+  "password": "Password",
+  "alreadyHaveAnAccount": "Already have an account?",
+  "enterYourPassword": "Enter your password",
+  "pleaseEnterYourPassword": "Please enter your password",
+  "logIn": "Log in",
+  "signUp": "Sign up",
+  "dontHaveAnAccount": "Don\'t have an account?",
+  "register": "Register",
+  "enterYourEmail": "Enter your email","pleaseEnterYourEmail": "Please enter your email"
 }

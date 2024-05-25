@@ -14,5 +14,20 @@
   "typeSomething": "Biror narsani kiriting",
   "writeYourReviewHere": "Izohingizni bu yerda yozing",
   "pleaseEnterSomeText": "Iltimos, matn kiriting",
-  "submit": "Yuborish"
+  "submit": "Yuborish",
+  "noRegionsFound": "Hududlar topilmadi",
+  "navigate": "Yo'nalish",
+  "reviews": "Izohlar",
+  "seeAll": "Barchasini ko'rish",
+  "reviewAddScreen": "Izoh qo'shihish oynasi",
+  "email": "Email",
+  "password": "Parol",
+  "alreadyHaveAnAccount": "Allaqachon ro'yhatdan o'tganmisiz?",
+  "enterYourPassword": "Emailingizni kiriting",
+  "pleaseEnterYourPassword": "Iltimos parolingizni kiriting",
+  "logIn": "Kirish",
+  "signUp": "Ro'yhatdan o'tish",
+  "dontHaveAnAccount": "Hisobingiz yo'qmi?",
+  "register": "Ro'yhatdan o'tish",
+  "enterYourEmail": "Emailingizni kiriting","pleaseEnterYourEmail": "Iltimos, emailingizni kiriting"
 }
